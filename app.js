@@ -21,8 +21,9 @@ app.use(responseTime())
 app.engine('handlebars', hbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
-app.get('/', (req, res) => {
-  res.send('Welcome to caching experience!')
+app.get('/', async (req, res) => {
+  const categories = await Category.find({}, [], { sort: { orderNumber: 1 } })
+  res.render('home', { categories: categories })
 })
 
 app.get('/seeds', async (req, res) => {
