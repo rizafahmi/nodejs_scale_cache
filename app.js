@@ -10,27 +10,25 @@ app.get('/', (req, res) => {
   res.send('Welcome to caching experience!')
 })
 
-app.get('/api/:username', (req, res) => {
+app.get('/api/:username', async (req, res) => {
   const { username } = req.params
 
-  github
-    .getUserRepositories(username)
-    .then(github.computeTotalStars)
-    .then(totalStars => {
-      res.send({
-        totalStars,
-        source: 'GitHub'
-      })
+  try {
+    const repos = await github.getUserRepositories(username)
+    const totalStars = await github.computeTotalStars(repos)
+    res.send({
+      totalStars,
+      source: 'GitHub'
     })
-    .catch(response => {
-      if (response.response.status === 404) {
-        res.send(
-          'The GitHub username could not be found. Try "rizafahmi" for example'
-        )
-      } else {
-        res.send(response)
-      }
-    })
+  } catch (err) {
+    if (err.response.status === 404) {
+      res.send(
+        'The GitHub username could not be found. Try "rizafahmi" for example'
+      )
+    } else {
+      res.send(err)
+    }
+  }
 })
 
 app.listen(app.get('port'), () => {
