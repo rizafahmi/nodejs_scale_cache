@@ -22,8 +22,32 @@ app.engine('handlebars', hbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
 app.get('/', async (req, res) => {
-  const categories = await Category.find({}, [], { sort: { orderNumber: 1 } })
-  res.render('home', { categories: categories })
+  cache.get(`category:*`, async (err, categoriesInCache) => {
+    if (err) console.log(err)
+    if (categoriesInCache) {
+      res.render('home', { categories: JSON.parse(categoriesInCache) })
+    } else {
+      const categories = await Category.find({}, [], {
+        sort: { orderNumber: 1 }
+      })
+      cache.setex(`category:*`, 60, JSON.stringify(categories))
+      res.render('home', { categories: categories })
+    }
+  })
+})
+
+app.get('/category/:id', async (req, res) => {
+  const { id } = req.params
+  cache.get(`category:${id}`, async (err, categoryInCache) => {
+    if (err) console.log(err)
+    if (categoryInCache) {
+      res.render('category', { category: JSON.parse(categoryInCache) })
+    } else {
+      const category = await Category.findById(id)
+      cache.setex(`category:${id}`, 60, JSON.stringify(category))
+      res.render('category', { category })
+    }
+  })
 })
 
 app.get('/seeds', async (req, res) => {
