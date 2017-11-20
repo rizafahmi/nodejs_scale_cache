@@ -2,7 +2,11 @@
   "name": "nodejs_scale_cache",
   "version": "1.0.0",
   "description": "Scaling NodeJS app with Caching",
-  "main": "server.js",
+  "main": "app.js",
   "author": "Riza Fahmi",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.2",
+    "response-time": "^2.3.2"
+  }
 }
