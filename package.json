@@ -6,6 +6,7 @@
   "author": "Riza Fahmi",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.17.1",
     "express": "^4.16.2",
     "response-time": "^2.3.2"
   },
