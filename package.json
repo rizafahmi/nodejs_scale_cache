@@ -1,0 +1,8 @@
+{
+  "name": "nodejs_scale_cache",
+  "version": "1.0.0",
+  "description": "Scaling NodeJS app with Caching",
+  "main": "server.js",
+  "author": "Riza Fahmi",
+  "license": "MIT"
+}
