@@ -1,7 +1,9 @@
 const app = require('express')()
+const hbs = require('express-handlebars')
 const responseTime = require('response-time')
 const redis = require('redis')
 const mongoose = require('mongoose')
+const faker = require('faker')
 
 const github = require('./lib/github')
 const Category = require('./models/category')
@@ -16,6 +18,8 @@ cache.on('error', err => console.log(`Redis error: ${err}`))
 
 app.set('port', process.env.PORT || 3000)
 app.use(responseTime())
+app.engine('handlebars', hbs({ defaultLayout: 'main' }))
+app.set('view engine', 'handlebars')
 
 app.get('/', (req, res) => {
   res.send('Welcome to caching experience!')
@@ -24,15 +28,15 @@ app.get('/', (req, res) => {
 app.get('/seeds', async (req, res) => {
   const count = await Category.count({})
   if (count < 1) {
-    const data = [
-      { name: 'Home', description: 'Home page', order: 1 },
-      { name: 'About', description: 'About page', order: 2 },
-      { name: 'Contact', description: 'Contact page', order: 3 }
-    ]
-    Category.collection.insert(data, (err, docs) => {
-      if (err) console.log(err)
-      console.log(docs)
-    })
+    for (let i = 0; i < 100; i++) {
+      const name = faker.lorem.words()
+      const description = faker.lorem.paragraph()
+      const orderNumber = faker.random.number()
+      const slug = faker.lorem.slug()
+      console.log(name, description, orderNumber, slug)
+      const newCategory = new Category({ name, description, orderNumber, slug })
+      newCategory.save().then(() => console.log('Data seeds...'))
+    }
   }
   res.send('Seeding data...')
 })

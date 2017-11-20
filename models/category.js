@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const categorySchema = mongoose.Schema({
   name: String,
   description: String,
-  order: Number
+  orderNumber: Number,
+  slug: String
 })
 
 module.exports = mongoose.model('Category', categorySchema)

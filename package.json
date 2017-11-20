@@ -8,6 +8,8 @@
   "dependencies": {
     "axios": "^0.17.1",
     "express": "^4.16.2",
+    "express-handlebars": "^3.0.0",
+    "faker": "^4.1.0",
     "mongoose": "^4.13.4",
     "redis": "^2.8.0",
     "response-time": "^2.3.2"
